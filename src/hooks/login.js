@@ -22,7 +22,6 @@ export function useLogin() {
             login: login_info.username,
             password: login_info.password,
         };
-        console.log(data);
         try {
             const response = await fetch(`${API_URL}/auth`, {
                 body: JSON.stringify(data),
@@ -34,7 +33,6 @@ export function useLogin() {
             const text = await response.json();
 
             const token = text.jwtToken;
-            console.log(text);
             const jwt_info = parseJwt(token);
             if (jwt_info) {
                 tokenStore.setPayload(jwt_info);

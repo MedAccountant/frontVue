@@ -126,11 +126,9 @@ const roles = ref(["Admin", "DataProducer", "Editor"]);
 const departments = ref([]);
 async function addUserFetchAndShow() {
     showAddUser.value = true;
-    console.log(departments.value.length);
     if (departments.value.length === 0) {
         try {
             const response = await fetch(`${API_URL}Vista/admin/departments`);
-            console.log(response);
             const data = await response.json();
             for (let item of data) {
                 departments.value.push(item);
@@ -145,7 +143,8 @@ async function addNewUser() {
         userForAdd.password.length < 8 ||
         userForAdd.login.length < 5 ||
         userForAdd.nickname.length < 1 ||
-        departmentsTake.value.length === 0
+        departmentsTake.value.length === 0 ||
+        userForAdd.role === ""
     ) {
         userForAdd.dataAccepted = false;
     } else {
@@ -171,8 +170,7 @@ async function addNewUser() {
                     "Content-Type": "application/json",
                 },
             });
-            console.log(response);
-            const text = await response.json();
+
             users.value.push({
                 login: userForAdd.login,
                 nickname: userForAdd.nickname,

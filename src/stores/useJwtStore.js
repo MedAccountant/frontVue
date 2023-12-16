@@ -16,6 +16,7 @@ export const useJwtStore = defineStore("token", {
             this.is_user_logged = true;
         },
         setPayload(payload) {
+            console.log(payload);
             this.role = payload.role;
             this.name = payload.sub;
             this.departments = payload.departments;

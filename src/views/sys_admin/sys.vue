@@ -18,7 +18,6 @@ import { API_URL } from "@/constants";
 import company from "@/components/sys_admin/company.vue";
 const companies = ref([]);
 async function deleteCompany(companyToDelete) {
-    console.log(JSON.stringify({ companyName: companyToDelete }));
     try {
         const response = await fetch(`${API_URL}sys_admin/companies`, {
             method: "DELETE",
@@ -43,7 +42,6 @@ async function getCompaniesList() {
                 key: companies.value.length,
             });
         }
-        console.log(companies);
     } catch (error) {
         console.log(error);
     }

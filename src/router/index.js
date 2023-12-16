@@ -5,6 +5,7 @@ import sys from "@/views/sys_admin/sys.vue";
 import admin_users from "@/views/admin/management/admin_users.vue";
 import editor from "@/views/editor/editor.vue";
 import admin_suppliers from "@/views/admin/management/admin_suppliers.vue";
+import admin_departments from "@/views/admin/management/admin_departments.vue";
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: [
@@ -31,6 +32,10 @@ const router = createRouter({
         {
             path: "/admin/suppliers",
             component: admin_suppliers,
+        },
+        {
+            path: "/admin/departments",
+            component: admin_departments,
         },
     ],
 });

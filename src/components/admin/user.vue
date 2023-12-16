@@ -27,25 +27,25 @@
             @click.stop
         >
             <div
-                class="bg-white text-zinc-900 p-2 grid grid-cols-2 justify-between"
+                class="bg-white text-zinc-900 p-2 grid grid-cols-2 justify-between border border-violet-900"
             >
                 <p>Name:</p>
                 <p class="text-end text-2xl">{{ user.nickname }}</p>
             </div>
             <div
-                class="bg-white text-zinc-900 p-2 grid grid-cols-2 justify-between"
+                class="bg-white text-zinc-900 p-2 grid grid-cols-2 justify-between border border-violet-900"
             >
                 <p>Login:</p>
                 <p class="text-end text-2xl">{{ user.login }}</p>
             </div>
             <div
-                class="bg-white text-zinc-900 p-2 grid grid-cols-2 justify-between"
+                class="bg-white text-zinc-900 p-2 grid grid-cols-2 justify-between border border-violet-900"
             >
                 <p>Role:</p>
                 <p class="text-end text-2xl">{{ user.role }}</p>
             </div>
             <div
-                class="bg-white text-zinc-900 p-2 grid grid-cols-2 justify-between"
+                class="bg-white text-zinc-900 p-2 grid grid-cols-2 justify-between border border-violet-900"
             >
                 <p>Departments:</p>
                 <div class="text-end text-2xl">
