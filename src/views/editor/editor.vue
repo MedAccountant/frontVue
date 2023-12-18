@@ -24,7 +24,7 @@
                 Supply
             </button>
             <button
-                @click="navigateTo(current_path + 'ad,im/departments')"
+                @click="navigateTo(current_path + '/departments')"
                 class="menu-button"
             >
                 Departments

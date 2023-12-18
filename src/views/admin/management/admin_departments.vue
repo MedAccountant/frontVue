@@ -1,5 +1,5 @@
 <template>
-    <div class="flex justify-center min-h-screen items-center flex-col">
+    <div class="flex justify-center min-h-screen items-center flex-col mt-12">
         <div class="grid grid-cols-3 w-96 border-b-violet-950 mb-2">
             <div class="name">Dep-ent name</div>
             <div class="text-center">Working marker</div>
@@ -9,6 +9,12 @@
             <department
                 v-for="item of departments"
                 :departmentInfo="item"
+                @deleteSingleDepartment="
+                    (x) =>
+                        (departments = departments.filter(
+                            (i) => i.departmentName != x
+                        ))
+                "
             ></department>
         </div>
         <div class="mt-2 grid grid-cols-2 w-96">
@@ -33,54 +39,9 @@
 
 <script setup>
 import department from "@/components/admin/department.vue";
-import { onMounted, ref, reactive } from "vue";
-import { API_URL } from "@/constants";
-const departments = ref([]);
-const newDepartmentName = reactive({
-    value: "",
-    ready: true,
-});
-onMounted(async () => {
-    try {
-        const response = await fetch(`${API_URL}Vista/admin/departments`);
-        const data = await response.json();
-        for (let item of data) {
-            departments.value.push(item);
-        }
-    } catch (error) {
-        console.log(error);
-    }
-});
-
-async function addNewDepartment() {
-    if (newDepartmentName.value.length > 0) {
-        try {
-            const response = await fetch(`${API_URL}Vista/admin/departments`, {
-                method: "POST",
-                body: JSON.stringify({
-                    departmentName: newDepartmentName.value,
-                    workingMarker: true,
-                }),
-                headers: {
-                    "Content-type": "application/json",
-                },
-            });
-            if (response) {
-                departments.value.push({
-                    departmentName: newDepartmentName.value,
-                    workingMarker: true,
-                });
-            }
-        } catch (error) {
-            console.log(error);
-        } finally {
-            newDepartmentName.ready = true;
-            newDepartmentName.value = "";
-        }
-    } else {
-        newDepartmentName.ready = false;
-    }
-}
+import { departmentManagement } from "@/hooks/admin_departments";
+const { departments, addNewDepartment, newDepartmentName } =
+    departmentManagement();
 </script>
 
 <style scoped></style>

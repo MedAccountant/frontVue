@@ -1,6 +1,6 @@
 <template>
     <div
-        class="flex justify-center mt-8 min-h-screen items-center flex-col gap-7"
+        class="flex justify-center mt-8 min-h-screen items-center flex-col gap-7 cont"
     >
         <h2 class="text-4xl font-bold">Hello</h2>
         <h3 class="text-xl font-normal">What do you want to do?</h3>

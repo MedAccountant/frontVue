@@ -23,7 +23,7 @@ function goBack() {
         <button
             @click="logOut"
             v-if="authStore.getLoggedState"
-            class="absolute right-0 top-0 bg-red-400 rounded text-white m-10 p-2"
+            class="fixed right-0 top-0 bg-red-500 rounded text-white m-10 p-2 hover:bg-red-600 transition-all"
         >
             logout
         </button>
@@ -33,10 +33,10 @@ function goBack() {
             v-if="
                 authStore.getLoggedState &&
                 route.fullPath !== '/admin' &&
-                route.fullPath !== '/user' &&
+                route.fullPath !== '/editor' &&
                 route.fullPath !== '/depman'
             "
-            class="absolute left-0 top-0 bg-slate-600 rounded text-white m-10 p-2"
+            class="fixed left-0 top-0 bg-slate-600 rounded text-white m-10 p-2 hover:bg-slate-700 transition-all"
         >
             back
         </button>
@@ -44,4 +44,9 @@ function goBack() {
     </div>
 </template>
 
-<style></style>
+<style>
+* {
+    margin: 0;
+    padding: 0;
+}
+</style>
