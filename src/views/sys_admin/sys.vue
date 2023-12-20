@@ -17,6 +17,25 @@ import { onMounted, ref } from "vue";
 import { API_URL } from "@/constants";
 import company from "@/components/sys_admin/company.vue";
 const companies = ref([]);
+async function addNewCompany() {
+    try {
+        const response = await fetch(`${API_URL}sys_admin/companies`, {
+            method: "POST",
+            body: JSON.stringify({
+                companyName: "Vista",
+            }),
+            headers: {
+                "Content-type": "application/json",
+            },
+        });
+        const data = await response.json();
+        companies.value.push({
+            company: data,
+        });
+    } catch (err) {
+        console.log(err);
+    }
+}
 async function deleteCompany(companyToDelete) {
     try {
         const response = await fetch(`${API_URL}sys_admin/companies`, {

@@ -6,25 +6,16 @@
         <h3 class="text-xl font-normal">What do you want to do?</h3>
         <div class="flex justify-around">
             <button
-                @click="navigateTo(current_path + '/initializePositions')"
-                class="menu-button"
-            >
-                Initialize positions
-            </button>
-            <button
-                @click="navigateTo(current_path + '/editPositions')"
-                class="menu-button"
-            >
-                Edit current positions
-            </button>
-            <button
                 @click="navigateTo(current_path + '/orders')"
                 class="menu-button"
             >
                 Orders
             </button>
-            <button @click="navigateTo('/complaints')" class="menu-button">
-                Complaints
+            <button
+                @click="navigateTo(current_path + '/fileupload')"
+                class="menu-button"
+            >
+                Load File
             </button>
         </div>
         <span>Logged as '{{ name }}' ({{ role }})</span>

@@ -60,9 +60,10 @@
                 </option>
             </select>
             <select
+                v-if="userForAdd.role !== 'Admin'"
                 class="p-5 border-violet-800 border-4 text-xl bg-white"
                 v-model="departmentsTake"
-                multiple
+                :multiple="userForAdd.role === 'Editor'"
             >
                 <option disabled value="" :key="0">Chose departments:</option>
                 <option
@@ -139,22 +140,32 @@ async function addUserFetchAndShow() {
     }
 }
 async function addNewUser() {
-    if (
-        userForAdd.password.length < 8 ||
-        userForAdd.login.length < 5 ||
-        userForAdd.nickname.length < 1 ||
-        departmentsTake.value.length === 0 ||
-        userForAdd.role === ""
-    ) {
-        userForAdd.dataAccepted = false;
-    } else {
+    const isValidData =
+        userForAdd.password.length >= 8 &&
+        userForAdd.login.length >= 5 &&
+        userForAdd.nickname.length >= 1 &&
+        departmentsTake.value.length > 0 &&
+        userForAdd.role !== "";
+
+    if (isValidData) {
         userForAdd.dataAccepted = true;
-        for (let department of departmentsTake.value) {
+
+        if (userForAdd.role === "Admin") {
+            userForAdd.departments = departments.value;
+        } else if (userForAdd.role === "Editor") {
+            for (let department of departmentsTake.value) {
+                userForAdd.departments.push({
+                    departmentName: department,
+                    workingMarker: true,
+                });
+            }
+        } else {
             userForAdd.departments.push({
-                departmentName: department,
+                departmentName: departmentsTake.value,
                 workingMarker: true,
             });
         }
+
         const data = JSON.stringify({
             login: userForAdd.login,
             password: userForAdd.password,
@@ -162,6 +173,7 @@ async function addNewUser() {
             departments: userForAdd.departments,
             role: userForAdd.role,
         });
+        console.log(data);
         try {
             const response = await fetch(`${API_URL}Vista/admin/users`, {
                 method: "POST",
@@ -170,13 +182,14 @@ async function addNewUser() {
                     "Content-Type": "application/json",
                 },
             });
-
-            users.value.push({
-                login: userForAdd.login,
-                nickname: userForAdd.nickname,
-                role: userForAdd.role,
-                departments: userForAdd.departments,
-            });
+            if (response.status < 300) {
+                users.value.push({
+                    login: userForAdd.login,
+                    nickname: userForAdd.nickname,
+                    role: userForAdd.role,
+                    departments: userForAdd.departments,
+                });
+            }
             showAddUser.value = false;
         } catch (error) {
             console.log(error);
@@ -187,6 +200,8 @@ async function addNewUser() {
             userForAdd.role = "";
             userForAdd.departments = [];
         }
+    } else {
+        userForAdd.dataAccepted = false;
     }
 }
 

@@ -1,4 +1,5 @@
 <template>
+    <!-- Supplier List Section -->
     <div
         v-if="!show"
         class="min-h-screen w-8/12 grid grid-cols-2 items-center justify-center m-auto overflow-clip"
@@ -10,8 +11,7 @@
                 :supplierInfo="item"
                 @deleteSupplier="(x) => deleteItemFromSuppliers(x)"
                 :key="item.email"
-            >
-            </supplier>
+            ></supplier>
             <div v-else class="text-5xl font-medium">
                 No suppliers at your company
             </div>
@@ -25,34 +25,34 @@
         </div>
     </div>
 
-    <div
-        class="min-h-screen w-full backdrop-blur-sm bg-slate-500 bg-opacity-60 absolute top-0 left-0"
-        v-if="show"
-        @click.stop="show = false"
-    >
+    <!-- Add Supplier Modal Section -->
+    <div v-if="show" class="fixed inset-0 flex items-center justify-center">
+        <div
+            class="absolute inset-0 bg-slate-500 bg-opacity-60"
+            @click.stop="show = false"
+        ></div>
         <div
             @click.stop
-            class="w-96 bg-white border-2 border-violet-950 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col gap-2 p-3"
+            class="w-96 bg-white border-2 border-violet-950 relative flex flex-col gap-2 p-3"
         >
             <input
-                type="email"
-                class="p-3 focus:outline-none bg-slate-400 bg-opacity-20 border border-opacity-20 border-violet-950"
-                placeholder="Email"
                 v-model="newSupplier.email"
+                placeholder="Email"
+                class="input-field"
             />
             <input
-                type="text"
-                class="p-3 focus:outline-none bg-slate-400 bg-opacity-20 border border-opacity-20 border-violet-950"
-                placeholder="Name"
                 v-model="newSupplier.name"
+                placeholder="Name"
+                class="input-field"
             />
-            <label for="departments">Select departments</label>
+            <label for="departments" class="text-gray-700"
+                >Select departments</label
+            >
             <select
                 name="departments"
-                id=""
                 multiple
                 v-model="newSupplier.departments"
-                class="bg-violet-950 text-white"
+                class="select-field"
             >
                 <option
                     v-for="(item, index) of departments"
@@ -60,13 +60,13 @@
                         departmentName: item.departmentName,
                         workingMarker: true,
                     }"
-                    :ket="index"
-                    class="p-2 border border-opacity-50 border-white"
+                    :key="index"
+                    class="p-2"
                 >
                     {{ item.departmentName }}
                 </option>
             </select>
-            <div class="">
+            <div class="mt-2">
                 Selected departments:
                 <div class="grid grid-cols-4 grid-rows-2">
                     <div
@@ -77,14 +77,11 @@
                     </div>
                 </div>
             </div>
-            <button
-                @click="addNewSupplier"
-                class="p-2 bg-purple-400 bg-opacity-70 border-black border-opacity-75 border"
-            >
+            <button @click="addNewSupplier" class="btn-primary">
                 Submit form
             </button>
             <div v-if="!dataValid" class="text-sm text-red-500">
-                data not valid
+                Data not valid
             </div>
         </div>
     </div>
@@ -106,6 +103,7 @@ const newSupplier = reactive({
     workingMarker: true,
 });
 const dataValid = ref(true);
+
 const validateEmail = (email) => {
     return String(email)
         .toLowerCase()
@@ -180,4 +178,59 @@ onMounted(async () => {
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+/* Add your existing styles and the new styles here */
+.supplier-list-container {
+    min-height: 100vh;
+    width: 8/12;
+    grid-template-columns: 2;
+    justify-items: center;
+    align-items: center;
+    margin: auto;
+    overflow: clip;
+}
+
+.supplier-list {
+    display: flex;
+    flex-direction: column;
+    gap: 3;
+    height: 1/2;
+    overflow: auto;
+    align-items: center;
+}
+
+.no-suppliers-message {
+    font-size: 5xl;
+    font-weight: medium;
+}
+
+.add-supplier-button {
+    cursor: pointer;
+}
+
+.add-supplier-modal-background {
+    min-height: 100vh;
+    width: full;
+    backdrop-filter: blur(8px);
+    background-color: rgba(0, 0, 0, 0.6);
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.add-supplier-modal {
+    width: 96;
+    background-color: white;
+    border: 2px solid #8b5cf6;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    gap: 2;
+    padding: 3;
+}
+
+/* Add more styles as needed */
+</style>
