@@ -15,8 +15,10 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import { API_URL } from "@/constants";
+import { checkAuth } from "@/hooks/check_auth";
 import company from "@/components/sys_admin/company.vue";
 const companies = ref([]);
+const authStore = checkAuth();
 async function addNewCompany() {
     try {
         const response = await fetch(`${API_URL}sys_admin/companies`, {
@@ -26,6 +28,7 @@ async function addNewCompany() {
             }),
             headers: {
                 "Content-type": "application/json",
+                Authorization: authStore.getToken,
             },
         });
         const data = await response.json();
@@ -40,6 +43,9 @@ async function deleteCompany(companyToDelete) {
     try {
         const response = await fetch(`${API_URL}sys_admin/companies`, {
             method: "DELETE",
+            headers: {
+                Authorization: authStore.getToken,
+            },
             body: JSON.stringify({ companyName: companyToDelete }),
         });
         if (response) {
@@ -53,6 +59,9 @@ async function getCompaniesList() {
     try {
         const response = await fetch(`${API_URL}sys_admin/companies`, {
             method: "GET",
+            headers: {
+                Authorization: authStore.getToken,
+            },
         });
         const data = await response.json();
         for (let item of data) {

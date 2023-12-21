@@ -70,13 +70,16 @@ const { authStore } = checkAuth();
 async function deleteUser() {
     console.log(JSON.stringify(user.value));
     try {
-        const response = await fetch(`${API_URL}Vista/admin/users`, {
-            method: "DELETE",
-            body: JSON.stringify(user.value),
-            headers: {
-                "Content-type": "application/json",
-            },
-        });
+        const response = await fetch(
+            `${API_URL}Vista/admin/users?login=${user.value.login}`,
+            {
+                method: "DELETE",
+
+                headers: {
+                    Authorization: authStore.getToken,
+                },
+            }
+        );
         if (response.status) {
             emits("deleteUserFromList", user.value.login);
         }

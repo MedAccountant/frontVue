@@ -111,7 +111,9 @@
 import { ref, onMounted, reactive } from "vue";
 import user from "@/components/admin/user.vue";
 import { API_URL } from "@/constants";
+import { checkAuth } from "@/hooks/check_auth";
 
+const { authStore } = checkAuth();
 const users = ref([]);
 const showAddUser = ref(false);
 const userForAdd = reactive({
@@ -129,7 +131,11 @@ async function addUserFetchAndShow() {
     showAddUser.value = true;
     if (departments.value.length === 0) {
         try {
-            const response = await fetch(`${API_URL}Vista/admin/departments`);
+            const response = await fetch(`${API_URL}Vista/admin/departments`, {
+                headers: {
+                    Authorization: authStore.getToken,
+                },
+            });
             const data = await response.json();
             for (let item of data) {
                 departments.value.push(item);
@@ -144,7 +150,7 @@ async function addNewUser() {
         userForAdd.password.length >= 8 &&
         userForAdd.login.length >= 5 &&
         userForAdd.nickname.length >= 1 &&
-        departmentsTake.value.length > 0 &&
+        (departmentsTake.value.length > 0 || userForAdd.role === "Admin") &&
         userForAdd.role !== "";
 
     if (isValidData) {
@@ -180,8 +186,10 @@ async function addNewUser() {
                 body: data,
                 headers: {
                     "Content-Type": "application/json",
+                    Authorization: authStore.getToken,
                 },
             });
+            console.log(response);
             if (response.status < 300) {
                 users.value.push({
                     login: userForAdd.login,
@@ -207,7 +215,11 @@ async function addNewUser() {
 
 onMounted(async () => {
     try {
-        const response = await fetch(`${API_URL}Vista/admin/users`);
+        const response = await fetch(`${API_URL}Vista/admin/users`, {
+            headers: {
+                Authorization: authStore.getToken,
+            },
+        });
         const data = await response.json();
         for (let item of data) {
             users.value.push(item);

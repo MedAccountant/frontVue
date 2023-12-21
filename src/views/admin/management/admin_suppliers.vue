@@ -92,9 +92,10 @@ import supplier from "@/components/admin/supplier.vue";
 import { API_URL } from "@/constants";
 import { onMounted, ref, reactive } from "vue";
 import { departmentManagement } from "@/hooks/admin_departments";
-
+import { checkAuth } from "@/hooks/check_auth";
 const show = ref(false);
 const suppliersList = ref([]);
+const { authStore } = checkAuth();
 const { departments } = departmentManagement();
 const newSupplier = reactive({
     email: "",
@@ -118,6 +119,7 @@ async function deleteItemFromSuppliers(x) {
             body: JSON.stringify(x),
             headers: {
                 "Content-type": "application/json",
+                Authorization: authStore.getToken,
             },
         });
         if (response.status < 300) {
@@ -140,6 +142,7 @@ async function addNewSupplier(x) {
                 body: JSON.stringify(newSupplier),
                 headers: {
                     "Content-type": "application/json",
+                    Authorization: authStore.getToken,
                 },
             });
             if (response.status < 300) {
@@ -167,7 +170,11 @@ async function addNewSupplier(x) {
 }
 onMounted(async () => {
     try {
-        const response = await fetch(`${API_URL}Vista/admin/suppliers`);
+        const response = await fetch(`${API_URL}Vista/admin/suppliers`, {
+            headers: {
+                Authorization: authStore.getToken,
+            },
+        });
         const data = await response.json();
         for (let item of data) {
             suppliersList.value.push(item);

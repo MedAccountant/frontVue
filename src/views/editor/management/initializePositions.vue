@@ -26,7 +26,15 @@
             </div>
         </div>
         <div v-if="selectedMode.isSelected == 'list'">
-            <positionList :positionListArr="positionsList"></positionList>
+            <positionList
+                :positionListArr="positionsListPass"
+                @deletePos="
+                    (x) =>
+                        (positionsListPass = positionsListPass.filter(
+                            (i) => i.positionDataId != x
+                        ))
+                "
+            ></positionList>
         </div>
     </div>
 </template>
@@ -45,7 +53,7 @@ const selectedMode = reactive({
     selectedDepartment: "",
     isSelected: "choice",
 });
-const positionsList = ref([]);
+const positionsListPass = ref([]);
 const linkWithMode = ref("");
 onMounted(async () => {
     try {
@@ -81,10 +89,9 @@ async function selectMode(mode) {
         });
         if (response.ok) {
             const data = await response.json();
-            positionsList.value = data;
+            positionsListPass.value = data;
             selectedMode.isSelected = "list";
             PosStore.setEditorMode(mode === "global_mode" ? "global" : mode);
-            PosStore.setDepartments(myDepartments.value);
         }
     } catch (error) {
         console.log(error);

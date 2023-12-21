@@ -25,8 +25,9 @@
 <script setup>
 import { toRef } from "vue";
 import { API_URL } from "@/constants";
+import { checkAuth } from "@/hooks/check_auth";
 const props = defineProps(["departmentInfo"]);
-
+const { authStore } = checkAuth();
 const emits = defineEmits(["deleteSingleDepartment"]);
 const departmentInfo = toRef(props.departmentInfo);
 async function deleteDepartment() {
@@ -37,6 +38,7 @@ async function deleteDepartment() {
             body: JSON.stringify(departmentInfo.value),
             headers: {
                 "Content-type": "application/json",
+                Authorization: authStore.getToken,
             },
         });
         if (response.status < 300) {

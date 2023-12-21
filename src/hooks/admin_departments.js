@@ -1,7 +1,9 @@
 import { onMounted, ref, reactive } from "vue";
 import { API_URL } from "@/constants";
+import { checkAuth } from "./check_auth";
 
 export function departmentManagement() {
+    const { authStore } = checkAuth();
     const departments = ref([]);
     const newDepartmentName = reactive({
         value: "",
@@ -9,7 +11,12 @@ export function departmentManagement() {
     });
     onMounted(async () => {
         try {
-            const response = await fetch(`${API_URL}Vista/admin/departments`);
+            const response = await fetch(`${API_URL}Vista/admin/departments`, {
+                method: "GET",
+                headers: {
+                    Authorization: authStore.getToken,
+                },
+            });
             const data = await response.json();
             for (let item of data) {
                 departments.value.push(item);
@@ -33,6 +40,7 @@ export function departmentManagement() {
                         }),
                         headers: {
                             "Content-type": "application/json",
+                            Authorization: authStore.getToken,
                         },
                     }
                 );
