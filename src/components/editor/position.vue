@@ -16,7 +16,7 @@
         <div
             v-for="i of 4"
             class="bg-white p-4 text-center"
-            :key="new Date().toISOString()"
+            :key="i"
             :class="{
                 'bg-violet-500 text-white': position.editedMarker,
             }"

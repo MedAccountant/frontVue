@@ -10,6 +10,7 @@ import departmentsEditor from "@/views/editor/management/departmentsEditor.vue";
 import initializePositions from "@/views/editor/management/initializePositions.vue";
 import dataproducer from "@/views/dataProducer/dataproducer.vue";
 import fileUpload from "@/views/dataProducer/fileUpload.vue";
+import ordersEditor from "@/views/editor/management/ordersEditor.vue";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -57,6 +58,10 @@ const router = createRouter({
         {
             path: "/dataproducer/fileupload",
             component: fileUpload,
+        },
+        {
+            path: "/editor/orders",
+            component: ordersEditor,
         },
     ],
 });

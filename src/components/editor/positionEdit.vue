@@ -15,6 +15,7 @@
                         'text-violet-500': pages.current_page === item,
                     }"
                     v-for="item of pages.allPages"
+                    :key="item.current_page"
                 >
                     {{ item }}
                 </div>
@@ -38,6 +39,7 @@
                         >
                             <div
                                 v-for="item of dataToEdit.attributes"
+                                :key="item.attributeName"
                                 class="grid grid-cols-2 border-b-2 border-b-indigo-400 mb-2 p-2"
                             >
                                 <div class="text-left">
@@ -58,6 +60,7 @@
                         >
                             <div
                                 v-for="item of dataToEdit.limits"
+                                :key="item.startDate"
                                 class="grid grid-cols-4"
                             >
                                 <div>
@@ -96,6 +99,12 @@
                             Save local changes
                         </button>
                         <button
+                            @click="saveChanges"
+                            class="bg-violet-500 text-white rounded-2xl py-2 px-6 cursor-pointer"
+                        >
+                            Save position
+                        </button>
+                        <button
                             @click="deletePosition"
                             class="bg-violet-500 text-white rounded-2xl py-2 px-6 cursor-pointer"
                         >
@@ -132,6 +141,7 @@
                     <option
                         v-for="item of dataToEdit.departmentsWherePositionOccurs"
                         :value="item"
+                        :key="item.departmentName"
                     >
                         {{ item.departmentName }}
                     </option>
@@ -196,6 +206,7 @@
                     <option
                         v-for="(item, index) of dataToEdit.attributes"
                         :value="index"
+                        :key="index"
                     >
                         {{ item.attributeName }}
                     </option>
@@ -242,6 +253,7 @@
                     <option
                         v-for="(item, index) of dataToEdit.limits"
                         :value="index"
+                        :key="index"
                     >
                         {{ item.startDate }}
                     </option>
@@ -275,6 +287,7 @@
                         <option
                             v-for="item of dataToEdit.departmentsWherePositionOccurs"
                             :value="item"
+                            :key="item.departmentName"
                         >
                             {{ item.departmentName }}
                         </option>
@@ -383,7 +396,6 @@ const goToPage = (page) => {
 let link = "";
 async function saveCurrent() {
     try {
-        console.log(dataToEdit.value);
         const response = await fetch(link, {
             method: "PUT",
             body: JSON.stringify(dataToEdit.value),
@@ -408,7 +420,24 @@ async function deletePosition() {
                 Authorization: jwt.getToken,
             },
         });
-        console.log(response);
+
+        if (response.ok) {
+            emits("close");
+            emits("deletePos");
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+async function saveChanges() {
+    try {
+        const response = await fetch(link, {
+            method: "POST",
+            headers: {
+                Authorization: jwt.getToken,
+            },
+        });
         if (response.ok) {
             emits("close");
             emits("deletePos");

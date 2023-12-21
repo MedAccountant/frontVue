@@ -17,6 +17,7 @@
                 >
                     <div
                         v-for="department of myDepartments"
+                        :key="department.departmentName"
                         @click="selectMode(department.departmentName)"
                         class="rounded-md p-2 bg-violet-950 hover:shadow-sm hover:shadow-violet-950 transition-all cursor-pointer hover:-translate-y-1"
                     >
@@ -25,7 +26,10 @@
                 </div>
             </div>
         </div>
-        <div v-if="selectedMode.isSelected == 'list'">
+        <div
+            v-if="selectedMode.isSelected == 'list'"
+            class="overflow-scroll mt-20"
+        >
             <positionList
                 :positionListArr="positionsListPass"
                 @deletePos="
