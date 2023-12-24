@@ -3,6 +3,7 @@
         <div class="border-red-400 rounded-lg flex-col flex">
             <user
                 v-for="user of users"
+                :key="user.name"
                 :userInfo="user"
                 @deleteUserFromList="
                     (x) => (users = users.filter((i) => i.login != x))
