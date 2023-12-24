@@ -7,7 +7,7 @@
             @click.stop
             class="w-3/4 bg-white border-2 border-violet-950 flex flex-col p-11 rounded-2xl dialog items-center"
         >
-            <div class="grid grid-cols-5 gap-3 text-center mb-5">
+            <div class="grid grid-flow-col gap-3 text-center mb-5">
                 <div
                     @click="goToPage(item)"
                     class="text-indigo-400 cursor-pointer"
@@ -93,6 +93,7 @@
                     <!-- Marker -->
                     <div class="gap-4 self-end justify-self-end flex flex-col">
                         <button
+                            v-if="PosStore.getEditorMode !== 'global'"
                             @click="saveCurrent"
                             class="bg-violet-500 text-white rounded-2xl py-2 px-6 cursor-pointer"
                         >
@@ -103,12 +104,6 @@
                             class="bg-violet-500 text-white rounded-2xl py-2 px-6 cursor-pointer"
                         >
                             Save position
-                        </button>
-                        <button
-                            @click="deletePosition"
-                            class="bg-violet-500 text-white rounded-2xl py-2 px-6 cursor-pointer"
-                        >
-                            Delete position
                         </button>
                     </div>
                 </div>
@@ -310,7 +305,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, toRefs, reactive } from "vue";
+import { onMounted, ref, toRefs, reactive, resolveDynamicComponent } from "vue";
 import { usePositionStore } from "@/stores/usePositionStore";
 import { useJwtStore } from "@/stores/useJwtStore";
 import { API_URL } from "@/constants";
@@ -330,9 +325,12 @@ const pages = reactive({
         "edit limits",
     ],
 });
+if (PosStore.getEditorMode === "global") {
+    pages.allPages = ["info"];
+}
 const { positionInfo } = toRefs(props);
 const dataToEdit = ref({});
-const emits = defineEmits(["close", "deletePos"]);
+const emits = defineEmits(["close"]);
 const mode = ref(PosStore.getEditorMode);
 
 const limitData = ref({
@@ -412,35 +410,22 @@ async function saveCurrent() {
     }
 }
 
-async function deletePosition() {
-    try {
-        const response = await fetch(link, {
-            method: "DELETE",
-            headers: {
-                Authorization: jwt.getToken,
-            },
-        });
-
-        if (response.ok) {
-            emits("close");
-            emits("deletePos");
-        }
-    } catch (error) {
-        console.log(error);
-    }
-}
-
 async function saveChanges() {
+    let bodyObj = {};
+    if (PosStore.getEditorMode === "global") {
+        bodyObj = dataToEdit.value;
+    }
     try {
         const response = await fetch(link, {
             method: "POST",
+            body: JSON.stringify(bodyObj),
             headers: {
                 Authorization: jwt.getToken,
+                "Content-type": "application/json",
             },
         });
         if (response.ok) {
             emits("close");
-            emits("deletePos");
         } else {
             const data = await response.text();
             alert(data);
@@ -451,9 +436,9 @@ async function saveChanges() {
 }
 onMounted(async () => {
     if (PosStore.getEditorMode === "global") {
-        link = `${API_URL}Vista/editor/new_position_info?newPositionId=${positionInfo.value.positionDataId}`;
+        link = `${API_URL}Vista/editor/current_position_info?currentPositionId=${positionInfo.value.currentPositionId}`;
     } else {
-        link = `${API_URL}Vista/editor/${PosStore.getEditorMode}/new_position_info?newPositionId=${positionInfo.value.positionDataId}`;
+        link = `${API_URL}Vista/editor/${PosStore.getEditorMode}/current_position_info?currentPositionId=${positionInfo.value.currentPositionId}`;
     }
     try {
         const response = await fetch(link, {
@@ -461,8 +446,10 @@ onMounted(async () => {
                 Authorization: jwt.getToken,
             },
         });
+
         if (response.ok) {
             dataToEdit.value = await response.json();
+            console.log(dataToEdit.value);
         }
     } catch (error) {}
 });

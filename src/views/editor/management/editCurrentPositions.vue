@@ -30,27 +30,21 @@
             v-if="selectedMode.isSelected == 'list'"
             class="overflow-scroll mt-20"
         >
-            <positionList
-                :positionListArr="positionsListPass"
-                @deletePos="
-                    (x) =>
-                        (positionsListPass = positionsListPass.filter(
-                            (i) => i.positionDataId != x
-                        ))
-                "
-            ></positionList>
+            <currentPositionList :positionListArr="positionsListPass">
+            </currentPositionList>
         </div>
     </div>
 </template>
 
 <script setup>
-import positionList from "@/views/editor/management/positionList.vue";
+import { fetchData } from "@/hooks/fetchHook";
+import { onMounted, ref, reactive } from "vue";
+import currentPositionList from "@/views/editor/management/currentPositionList.vue";
 import { usePositionStore } from "@/stores/usePositionStore";
-import { onMounted, ref, reactive, onUnmounted } from "vue";
 import { API_URL } from "@/constants";
-import { checkAuth } from "@/hooks/check_auth";
+import { useJwtStore } from "@/stores/useJwtStore";
 const PosStore = usePositionStore();
-const { authStore } = checkAuth();
+const authStore = useJwtStore();
 const myDepartments = ref([]);
 const selectedMode = reactive({
     isGlobal: false,
@@ -59,45 +53,38 @@ const selectedMode = reactive({
 });
 const positionsListPass = ref([]);
 const linkWithMode = ref("");
+
 onMounted(async () => {
     try {
-        const response = await fetch(`${API_URL}Vista/editor/departments`, {
-            headers: {
-                Authorization: authStore.getToken,
-            },
+        const response = await fetchData({
+            url: `${API_URL}Vista/editor/departments`,
+            methodOption: "GET",
         });
         if (response.ok) {
-            const data = await response.json();
-
-            myDepartments.value = data;
+            myDepartments.value = await response.data;
         }
-    } catch (error) {
-        console.log(error);
-    }
+    } catch (error) {}
 });
 
-onUnmounted(() => {
-    PosStore.setEditorMode("");
-});
 async function selectMode(mode) {
     if (mode == "global_mode") {
         selectedMode.isGlobal = true;
         selectedMode.selectedDepartment = "";
-        linkWithMode.value = `${API_URL}Vista/editor/new_positions`;
+        linkWithMode.value = `${API_URL}Vista/editor/current_positions`;
     } else {
         selectedMode.isGlobal = false;
         selectedMode.selectedDepartment = mode;
-        linkWithMode.value = `${API_URL}Vista/editor/${selectedMode.selectedDepartment}/new_positions`;
+        linkWithMode.value = `${API_URL}Vista/editor/${selectedMode.selectedDepartment}/current_positions`;
     }
     try {
         const response = await fetch(`${linkWithMode.value}`, {
+            method: "GET",
             headers: {
                 Authorization: authStore.getToken,
             },
         });
         if (response.ok) {
-            const data = await response.json();
-            positionsListPass.value = data;
+            positionsListPass.value = await response.json();
             selectedMode.isSelected = "list";
             PosStore.setEditorMode(mode === "global_mode" ? "global" : mode);
         }

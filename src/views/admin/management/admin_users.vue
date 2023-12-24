@@ -112,7 +112,7 @@ import { ref, onMounted, reactive } from "vue";
 import user from "@/components/admin/user.vue";
 import { API_URL } from "@/constants";
 import { checkAuth } from "@/hooks/check_auth";
-
+import { fetchData } from "@/hooks/fetchHook";
 const { authStore } = checkAuth();
 const users = ref([]);
 const showAddUser = ref(false);
@@ -131,12 +131,10 @@ async function addUserFetchAndShow() {
     showAddUser.value = true;
     if (departments.value.length === 0) {
         try {
-            const response = await fetch(`${API_URL}Vista/admin/departments`, {
-                headers: {
-                    Authorization: authStore.getToken,
-                },
+            const response = await fetchData({
+                url: `${API_URL}Vista/admin/departments`,
             });
-            const data = await response.json();
+            const data = await response.data;
             for (let item of data) {
                 departments.value.push(item);
             }
@@ -181,16 +179,16 @@ async function addNewUser() {
         });
         console.log(data);
         try {
-            const response = await fetch(`${API_URL}Vista/admin/users`, {
-                method: "POST",
-                body: data,
-                headers: {
+            const response = await fetchData({
+                url: `${API_URL}Vista/admin/users`,
+                methodOption: "POST",
+                bodyData: data,
+                headersData: {
                     "Content-Type": "application/json",
-                    Authorization: authStore.getToken,
                 },
             });
-            console.log(response);
-            if (response.status < 300) {
+
+            if (response.ok) {
                 users.value.push({
                     login: userForAdd.login,
                     nickname: userForAdd.nickname,
@@ -215,12 +213,14 @@ async function addNewUser() {
 
 onMounted(async () => {
     try {
-        const response = await fetch(`${API_URL}Vista/admin/users`, {
+        const response = await fetchData({
+            url: `${API_URL}Vista/admin/users`,
             headers: {
                 Authorization: authStore.getToken,
             },
         });
-        const data = await response.json();
+        const data = await response.data;
+        console.log(response);
         for (let item of data) {
             users.value.push(item);
         }

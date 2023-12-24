@@ -20,6 +20,9 @@
         >
             No orders
         </div>
+        <div v-else class="mt-5">
+            <ordersList :orderListArr="orders.all_orders" />
+        </div>
     </div>
 </template>
 
@@ -27,12 +30,13 @@
 import { onMounted, reactive } from "vue";
 import { API_URL } from "@/constants";
 import { checkAuth } from "@/hooks/check_auth";
+import ordersList from "@/views/editor/management/ordersList.vue";
+
 const { authStore } = checkAuth();
 const departments = reactive({ all_departments: [], chosen_department: "" });
 const orders = reactive({ all_orders: [], orders_empty: false });
 
 async function loadOrdersForDepartment() {
-    console.log(1);
     try {
         const response = await fetch(
             `${API_URL}Vista/editor/${departments.chosen_department}/orders`,
@@ -59,7 +63,6 @@ onMounted(async () => {
         });
         if (response.ok) {
             departments.all_departments = await response.json();
-            console.log(departments.all_departments);
         }
     } catch (error) {}
 });

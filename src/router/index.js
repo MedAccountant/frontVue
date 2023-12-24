@@ -11,6 +11,7 @@ import initializePositions from "@/views/editor/management/initializePositions.v
 import dataproducer from "@/views/dataProducer/dataproducer.vue";
 import fileUpload from "@/views/dataProducer/fileUpload.vue";
 import ordersEditor from "@/views/editor/management/ordersEditor.vue";
+import editCurrentPositions from "@/views/editor/management/editCurrentPositions.vue";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -62,6 +63,10 @@ const router = createRouter({
         {
             path: "/editor/orders",
             component: ordersEditor,
+        },
+        {
+            path: "/editor/editPositions",
+            component: editCurrentPositions,
         },
     ],
 });

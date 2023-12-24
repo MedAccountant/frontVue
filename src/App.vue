@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted } from "vue";
+import { API_URL } from "./constants";
 import { RouterLink, RouterView } from "vue-router";
 import { useRoute, useRouter } from "vue-router";
 import { checkAuth } from "@/hooks/check_auth";
@@ -16,6 +17,26 @@ function logOut() {
 function goBack() {
     router.back();
 }
+
+async function checkAuthorization() {
+    try {
+        const response = await fetch(`${API_URL}auth_check`, {
+            method: "GET",
+            headers: {
+                Authorization: authStore.getToken,
+            },
+        });
+        const text = await response.text();
+        if (response.ok) {
+            console.log(text);
+        } else {
+            authStore.removeToken();
+        }
+    } catch (err) {
+        console.log(err);
+    }
+}
+setInterval(checkAuthorization, 1000 * 60 * 15);
 </script>
 
 <template>
