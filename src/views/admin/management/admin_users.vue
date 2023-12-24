@@ -79,7 +79,7 @@
                 class="p-5 border-violet-800 border-4 text-xl"
                 @click="addNewUser"
             >
-                Добавить пользователя
+                Add user
             </button>
         </div>
         <label

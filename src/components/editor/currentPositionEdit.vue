@@ -100,6 +100,14 @@
                             Save local changes
                         </button>
                         <button
+                            v-if="PosStore.getEditorMode !== 'global'"
+                            @click="showStatistics"
+                            class="bg-violet-500 text-white rounded-2xl py-2 px-6 cursor-pointer"
+                        >
+                            Show statistics
+                        </button>
+
+                        <button
                             @click="saveChanges"
                             class="bg-violet-500 text-white rounded-2xl py-2 px-6 cursor-pointer"
                         >
@@ -309,12 +317,15 @@ import { onMounted, ref, toRefs, reactive, resolveDynamicComponent } from "vue";
 import { usePositionStore } from "@/stores/usePositionStore";
 import { useJwtStore } from "@/stores/useJwtStore";
 import { API_URL } from "@/constants";
-
+import { useStatisticStore } from "@/stores/statisticStore";
+const statisticStore = useStatisticStore();
+import router from "@/router";
 const jwt = useJwtStore();
 const PosStore = usePositionStore();
 const props = defineProps({
     positionInfo: Object,
 });
+
 const pages = reactive({
     current_page: "info",
     allPages: [
@@ -373,6 +384,13 @@ const addLimit = () => {
             "Check your fields\nAll fields must be filled and min max must be greater than 0"
         );
     }
+};
+
+const showStatistics = () => {
+    statisticStore.setLink(link);
+    router.push({
+        name: "statistics",
+    });
 };
 const addAttribute = () => {
     dataToEdit.value.attributes.push(attributeData.value);

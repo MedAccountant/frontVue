@@ -13,11 +13,13 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
   },
   "dependencies": {
+    "chart.js": "^4.4.1",
     "path": "^0.12.7",
     "pinia": "^2.1.7",
     "pinia-plugin-persistedstate": "^3.2.0",
     "url": "^0.11.3",
     "vue": "^3.3.10",
+    "vue-chart-3": "^3.1.8",
     "vue-router": "^4.2.5"
   },
   "devDependencies": {

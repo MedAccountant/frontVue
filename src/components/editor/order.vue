@@ -5,7 +5,7 @@
     >
         <div class="flex gap-2">
             <span>Дата заказа:</span>
-            <span>{{ normalOrderName.date }}</span>
+            <span>{{ normalOrderName.date.slice(0, 10) }}</span>
         </div>
 
         <div class="flex gap-2">
@@ -67,11 +67,13 @@ const props = defineProps({
 });
 const orderFullInfo = ref({});
 const { orderInfo } = toRefs(props);
+
 const isInfoOpen = ref(false);
 let tmp = orderInfo.value.orderName.replace("/orders/", "").split(" ");
 const normalOrderName = reactive({ date: tmp[0], department: tmp[3] });
 tmp = orderInfo.value.orderName.replaceAll(" ", "_");
-let link = `${API_URL}Vista/editor/${normalOrderName.department}${tmp}`;
+
+let link = `${API_URL}Vista/editor/${normalOrderName.department}/orders/${tmp}`;
 
 async function openInfo() {
     isInfoOpen.value = !isInfoOpen.value;
@@ -109,12 +111,18 @@ async function downloadFile() {
             method: "GET",
             headers: {
                 Authorization: authStore.getToken,
+                "Content-type": "application/json",
             },
         });
         if (response.ok) {
             const blobFile = await response.blob();
-            const file = window.URL.createObjectURL(blobFile);
-            window.location.assign(file);
+            const url = window.URL.createObjectURL(blobFile);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = tmp + ".xlsx";
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
         }
     } catch (error) {
         console.log(error);
@@ -130,8 +138,7 @@ async function saveOrder() {
             },
         });
         if (response.ok) {
-            const text = await response.text();
-            console.log(text);
+            alert("Order was saved");
         }
     } catch (error) {
         console.log(error);

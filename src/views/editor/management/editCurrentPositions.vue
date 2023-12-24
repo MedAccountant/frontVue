@@ -12,6 +12,7 @@
                 >
                     Global
                 </div>
+
                 <div
                     class="grid grid-flow-row rounded-md text-center text-white gap-4 overflow-scroll items-start max-h-72"
                 >
@@ -30,6 +31,7 @@
             v-if="selectedMode.isSelected == 'list'"
             class="overflow-scroll mt-20"
         >
+            <div class="text-2xl font-bold">Current positions</div>
             <currentPositionList :positionListArr="positionsListPass">
             </currentPositionList>
         </div>

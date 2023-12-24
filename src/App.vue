@@ -27,6 +27,7 @@ async function checkAuthorization() {
             },
         });
         const text = await response.text();
+        console.log(text);
         if (response.ok) {
             console.log(text);
         } else {

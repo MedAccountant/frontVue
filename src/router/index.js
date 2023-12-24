@@ -6,12 +6,13 @@ import admin_users from "@/views/admin/management/admin_users.vue";
 import editor from "@/views/editor/editor.vue";
 import admin_suppliers from "@/views/admin/management/admin_suppliers.vue";
 import admin_departments from "@/views/admin/management/admin_departments.vue";
-import departmentsEditor from "@/views/editor/management/departmentsEditor.vue";
+
 import initializePositions from "@/views/editor/management/initializePositions.vue";
 import dataproducer from "@/views/dataProducer/dataproducer.vue";
 import fileUpload from "@/views/dataProducer/fileUpload.vue";
 import ordersEditor from "@/views/editor/management/ordersEditor.vue";
 import editCurrentPositions from "@/views/editor/management/editCurrentPositions.vue";
+import statisticPosition from "@/components/editor/statisticsPosition.vue";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -44,10 +45,7 @@ const router = createRouter({
             path: "/admin/departments",
             component: admin_departments,
         },
-        {
-            path: "/editor/departments",
-            component: departmentsEditor,
-        },
+
         {
             path: "/editor/initializePositions",
             component: initializePositions,
@@ -67,6 +65,11 @@ const router = createRouter({
         {
             path: "/editor/editPositions",
             component: editCurrentPositions,
+        },
+        {
+            path: "/editor/statistic",
+            component: statisticPosition,
+            name: "statistics",
         },
     ],
 });

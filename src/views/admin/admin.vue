@@ -11,12 +11,7 @@
             >
                 Users
             </button>
-            <button
-                @click="navigateTo(current_path + '/complaints')"
-                class="menu-button"
-            >
-                Complaints
-            </button>
+
             <button
                 @click="navigateTo(current_path + '/suppliers')"
                 class="menu-button"

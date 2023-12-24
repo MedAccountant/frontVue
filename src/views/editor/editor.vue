@@ -23,9 +23,6 @@
             >
                 Orders
             </button>
-            <button @click="navigateTo('/complaints')" class="menu-button">
-                Complaints
-            </button>
         </div>
         <span>Logged as '{{ name }}' ({{ role }})</span>
     </div>

@@ -19,6 +19,7 @@
         </div>
         <div class="mt-2 grid grid-cols-2 w-96">
             <input
+                @keypress.enter="addNewDepartment"
                 type="text"
                 class="border border-neutral-700 p-3 focus:outline-none"
                 placeholder="Department name"
